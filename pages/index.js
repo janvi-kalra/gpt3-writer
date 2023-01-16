@@ -9,6 +9,8 @@ const Home = () => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const callGenerateEndpoint = async () => {
+    console.log("calling generate endpoint");
+
     setIsGenerating(true);
     const response = await fetch("/api/generate", {
       method: "POST",
@@ -18,9 +20,9 @@ const Home = () => {
       body: JSON.stringify({ userInput }),
     });
     const { output } = await response.json();
-    setApiOutput(output);
+    setApiOutput(`${output.text}`);
 
-    console.log(apiOutput);
+    console.log(output);
     setIsGenerating(false);
   };
 
@@ -44,9 +46,10 @@ const Home = () => {
           />
         </div>
         <div className="prompt-buttons">
-          <a className="generate-button" onClick={callGenerateEndpoint}>
+          <a className={isGenerating ? 'generate-button loading' : 'generate-button' }
+            onClick={callGenerateEndpoint}>
             <div className="generate">
-              <p>Generate</p>
+              {isGenerating ? <span className="loader"></span> : <p>Generate</p>}
             </div>
           </a>
         </div>
